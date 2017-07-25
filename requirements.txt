@@ -1,0 +1,5 @@
+elasticsearch
+requests
+requests_ftp
+google-cloud
+google-cloud-storage
