@@ -5,6 +5,7 @@ import json
 
 url = 'ftp://ftp.ebi.ac.uk/pub/software/textmining/bootstrep/termrepository/LexEBI/geneProt70.xml.gz'
 gene_dictionary_path= 'GENE-LEXEBI.json'
+#geneProt70.xml does not have mlfreq element
 gene70_dictionary_path= 'GENE70-LEXEBI.json'
 disease_dictionary_path= 'DISEASE-LEXEBI.json'
 MAX_TERM_FREQ = 180000
@@ -21,11 +22,12 @@ IGNORE_LIST = ['cell',
                'domain',
                'gene',
                'fitting',
-               'fittings'
+               'fittings',
                '-14',
                'but',
-               'little'
-               'littles']
+               'little',
+               'littles',
+               'included']
 
 
 def label_to_id(element_names, element_id, label2id):
@@ -53,9 +55,11 @@ def parse_gene_lexicon(input,output):
         element_names = []
         for entry in cluster.iterchildren(tag='Entry'):
             element_id = entry.attrib['entryId']
+            if element_id == 'UNIPR_CP035_HUMAN_1':
+                print '14'
             if 'HUMAN' in element_id:
                 if entry.attrib['baseForm']:
-                    if input!= 'geneProt70.xml' and int(entry.attrib['mlfreq']) < MAX_TERM_FREQ:
+                    if  int(entry.attrib['mlfreq']) < MAX_TERM_FREQ:
 
                         element_names.append(entry.attrib['baseForm'])
 
@@ -113,33 +117,32 @@ def parse_disease_lexicon(input,output):
     # ftp://ftp.ebi.ac.uk/pub/software/textmining/bootstrep/termrepository/LexEBI/
 
 
-    target_dict = {}
+    disease_dict = {}
 
     for action, cluster in context:
         element_names = []
         for entry in cluster.iterchildren(tag='Entry'):
             element_id = entry.attrib['entryId']
 
-        if entry.attrib['baseForm']:
-            if int(entry.attrib['mlfreq']) < MAX_TERM_FREQ:
+            if entry.attrib['baseForm']:
+                if int(entry.attrib['mlfreq']) < MAX_TERM_FREQ:
 
-                element_names.append(entry.attrib['baseForm'])
+                    element_names.append(entry.attrib['baseForm'])
 
-        '''Synonyms'''
-        for variant in entry.iterchildren(tag='Variant'):
-            if int(variant.attrib['mlfreq']) < MAX_TERM_FREQ:
-                element_names.append(variant.attrib['writtenForm'])
+            '''Synonyms'''
+            for variant in entry.iterchildren(tag='Variant'):
+                if int(variant.attrib['mlfreq']) < MAX_TERM_FREQ:
+                    element_names.append(variant.attrib['writtenForm'])
 
-        label_to_id(element_names, element_id, target_dict)
+            label_to_id(element_names, element_id, disease_dict)
 
-    json.dump(target_dict,
+    json.dump(disease_dict,
               open(output, 'w'),
               indent=4)
 
 
 if __name__ == '__main__':
     parse_gene_lexicon('geneProt.xml', gene_dictionary_path)
-    parse_gene70_lexicon('geneProt70.xml', gene70_dictionary_path)
     parse_disease_lexicon('umlsDisease.xml', disease_dictionary_path)
 
 
