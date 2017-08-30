@@ -1,13 +1,15 @@
 
-
+import os
 from lxml import etree
 import json
+import gzip
+from ftplib import FTP
 
 url = 'ftp://ftp.ebi.ac.uk/pub/software/textmining/bootstrep/termrepository/LexEBI/geneProt70.xml.gz'
-gene_dictionary_path= 'GENE-LEXEBI.json'
+gene_dictionary_path= '../resources/GENE-LEXEBI.json'
 #geneProt70.xml does not have mlfreq element
-gene70_dictionary_path= 'GENE70-LEXEBI.json'
-disease_dictionary_path= 'DISEASE-LEXEBI.json'
+#gene70_dictionary_path= '../resources/GENE70-LEXEBI.json'
+disease_dictionary_path= '../resources/DISEASE-LEXEBI.json'
 MAX_TERM_FREQ = 180000
 
 #Ignore list created specifically for geneProt70.xml as it does not have mlfreq
@@ -139,9 +141,25 @@ def parse_disease_lexicon(input,output):
               open(output, 'w'),
               indent=4)
 
+def retrieve_xml(gzip_fname):
+    ftp = FTP('ftp.ebi.ac.uk')
+    ftp.login()
+    ftp.cwd('/pub/software/textmining/bootstrep/termrepository/LexEBI')
+    filedata = open('../resources/'+gzip_fname, 'wb')
+    ftp.retrbinary('RETR '+gzip_fname, filedata.write)
+    filedata.close()
+    ftp.quit()
+
+    with gzip.open('../resources/'+gzip_fname, "rb") as zip:
+        with open('../resources/'+gzip_fname[:-3], "w") as out:
+            for line in zip:
+                out.write(line)
+
 
 if __name__ == '__main__':
-    parse_gene_lexicon('geneProt.xml', gene_dictionary_path)
-    parse_disease_lexicon('umlsDisease.xml', disease_dictionary_path)
+    retrieve_xml('geneProt.xml.gz')
+    retrieve_xml('umlsDisease.xml.gz')
+    parse_gene_lexicon('../resources/geneProt.xml', gene_dictionary_path)
+    parse_disease_lexicon('../resources/umlsDisease.xml', disease_dictionary_path)
 
 
