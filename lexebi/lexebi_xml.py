@@ -55,8 +55,7 @@ def parse_gene_lexicon(input,output):
         element_names = []
         for entry in cluster.iterchildren(tag='Entry'):
             element_id = entry.attrib['entryId']
-            if element_id == 'UNIPR_CP035_HUMAN_1':
-                print '14'
+
             if 'HUMAN' in element_id:
                 if entry.attrib['baseForm']:
                     if  int(entry.attrib['mlfreq']) < MAX_TERM_FREQ:
@@ -65,7 +64,7 @@ def parse_gene_lexicon(input,output):
 
                 '''Synonyms'''
                 for variant in entry.iterchildren(tag='Variant'):
-                    if input!= 'geneProt70.xml' and int(variant.attrib['mlfreq']) < MAX_TERM_FREQ:
+                    if int(variant.attrib['mlfreq']) < MAX_TERM_FREQ:
                         element_names.append(variant.attrib['writtenForm'])
 
                 label_to_id(element_names, element_id, target_dict)
