@@ -1,16 +1,20 @@
 import json
 import os
+from collections import OrderedDict
 
 from elasticsearch import Elasticsearch, helpers
 
-es = Elasticsearch('http://localhost:30092')
+es = Elasticsearch('http://localhost:39200')
 gene_data_file_path = 'ot_gene_data.json'
 disease_data_file_path = 'ot_disease_data.json'
 pathway_data_file_path = 'ot_pathway_data.json'
+hpo_data_file_path = 'ot_pathway_data.json'
 
-gene_dictionary_path= 'TARGET-OPENTARGETS.json'
+
+gene_dictionary_path= 'GENE-OPENTARGETS.json'
 pathway_dictionary_path= 'PATHWAY-OPENTARGETS.json'
 disease_dictionary_path= 'DISEASE-OPENTARGETS.json'
+
 
 
 CRAP_LIST = ['duration',
@@ -28,7 +32,6 @@ CRAP_LIST = ['duration',
  'sleep',
  'metabolism',
  'gambling',
- 'age',
  'hearing',
  'intuition',
  'reading',
@@ -38,19 +41,28 @@ CRAP_LIST = ['duration',
  'antibody',
  'dose',
  'longevity',
- 'pregnancy',
  'excretion',
  'reasoning',
  'singles',
  'intelligence',
  'sensation',
- 'aging',
  'behaviour',
  'antibodies',
  'time',
  'survival',
  'suntan',
- 'function']
+ 'function',
+ 'all']
+
+def label_to_id(element_names, element_id, label2id):
+    '''adds all names to the dictionary with the proper id'''
+    element_names = list(set(element_names))
+    for name in element_names:
+        if name:
+            if name  and name.lower() not in CRAP_LIST:
+                if name not in label2id:
+                    label2id[name] = []
+                label2id[name].append(element_id)
 
 '''get data from es'''
 if not os.path.exists(gene_data_file_path):
@@ -64,7 +76,7 @@ if not os.path.exists(gene_data_file_path):
                                        'size': 100,
                                        },
                                 scroll='12h',
-                                index='17.06.2_gene-data',
+                                index='17.12_gene-data',
                                 timeout="30m",
                                 )
 
@@ -84,7 +96,7 @@ if not os.path.exists(disease_data_file_path):
                            'size': 100,
                        },
                        scroll='12h',
-                       index='17.06.2_efo-data',
+                       index='17.12_efo-data',
                        timeout="30m",
                        )
 
@@ -104,7 +116,7 @@ if not os.path.exists(pathway_data_file_path):
                            'size': 100,
                        },
                        scroll='12h',
-                       index='17.06.2_reactome-data',
+                       index='17.12_reactome-data',
                        timeout="30m",
                        )
 
@@ -117,16 +129,9 @@ if not os.path.exists(pathway_data_file_path):
 '''parse data'''
 
 
-def label_to_id(element_names, element_id, label2id):
-    element_names = list(set(element_names))
-    for name in element_names:
-        if name:
-            if name  and name.lower() not in CRAP_LIST:
-                if name not in label2id:
-                    label2id[name] = []
-                label2id[name].append(element_id)
 
-target_dict = {}
+
+target_dict =  OrderedDict()
 for line in open(gene_data_file_path):
     element = json.loads(line)
     element_id = element['id']
@@ -146,7 +151,7 @@ for line in open(gene_data_file_path):
 json.dump(target_dict, open(gene_dictionary_path, 'w'), indent=2)
 
 
-disease_dict = {}
+disease_dict =  OrderedDict()
 for line in open(disease_data_file_path):
     element = json.loads(line)
     element_id = element['code']
@@ -162,7 +167,7 @@ json.dump(disease_dict, open(disease_dictionary_path, 'w'), indent=2)
 
 
 
-pathway_dict = {}
+pathway_dict = OrderedDict()
 for line in open(pathway_data_file_path):
     element = json.loads(line)
     element_id = element['id']
