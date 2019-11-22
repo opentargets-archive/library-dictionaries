@@ -102,5 +102,5 @@ for i, row in tqdm(enumerate(cursor)):
             if row['synonyms']:
                 names.extend(list(set(row['synonyms'].split('|'))))
             label_to_id(names, mol_id, pref_name, molecules)
-json.dump(molecules, open('DRUG-CHEMBL.json', 'w'), indent=0)
+json.dump(molecules, open('DRUG-CHEMBL.json', 'w'), indent=2)
 print len(molecules),'molecule names exported'
