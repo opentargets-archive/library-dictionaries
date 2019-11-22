@@ -329,14 +329,16 @@ for url in [description_url, supplementary_concepts_url]:
         record_id = record['UI'][0]
         # print counter, record_id, record_classes, '|'.join(record_names)
 
+        record_name = None
         if record_id[0] == 'D':
+            record_name = record['MH'][0]
             descriptor2classes[record['MH'][0]] = record_classes
             base_names.append(record['MH'][0])
         else:
+            record_name = record['NM'][0]
             base_names.append(record['NM'][0])
         for mesh_class in record_classes:
-            mesh_classes[mesh_class]['entries'].append(dict(id=record_id,
-                                                            names=record_names))
+            mesh_classes[mesh_class]['entries'].append(dict(id=record_id, pref_name=record_name, names=record_names))
 
 all_names=set()
 for mesh_class, data in mesh_classes.items():
@@ -345,9 +347,9 @@ for mesh_class, data in mesh_classes.items():
     for entry in data['entries']:
         for name in entry['names']:
             if name not in formatted_data:
-                formatted_data[name] = []
-            formatted_data[name].append(entry['id'])
+                formatted_data[name] = label2id[name] = {"ids": [], "pref_name": entry["pref_name"] }
+            formatted_data[name]["ids"].append(entry['id'])
             all_names.add(name)
-    json.dump(formatted_data, open(mesh_class+'-MESH.json','w'))
+    json.dump(formatted_data, open(mesh_class+'-MESH.json','w'), indent=2)
 
 open('/tmp/all_mesh_strings.txt','w').write('\n'.join(list(all_names)))
