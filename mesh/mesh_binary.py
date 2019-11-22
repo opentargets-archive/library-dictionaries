@@ -312,8 +312,8 @@ for mesh_class in mesh_classes:
 
 descriptor2classes = {}
 
-description_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2017/asciimesh/d2017.bin'
-supplementary_concepts_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2017/asciimesh/c2017.bin'
+description_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2019/asciimesh/d2019.bin'
+supplementary_concepts_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2019/asciimesh/c2019.bin'
 s = requests.Session()
 counter = 0
 base_names = []
@@ -341,6 +341,8 @@ for url in [description_url, supplementary_concepts_url]:
             mesh_classes[mesh_class]['entries'].append(dict(id=record_id, pref_name=record_name, names=record_names))
 
 all_names=set()
+label2id[name] = dict()
+
 for mesh_class, data in mesh_classes.items():
     print mesh_class, len(data['entries'])
     formatted_data = {}
