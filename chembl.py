@@ -5,7 +5,7 @@ from collections import OrderedDict
 from tqdm import tqdm
 
 '''requirese chembl slqlite db ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/'''
-CHEMBL_SQLITE_DB = 'chembl_23.db'
+CHEMBL_SQLITE_DB = 'chembl_25.db'
 
 def dict_factory(cursor, row):
     d = {}
@@ -15,15 +15,15 @@ def dict_factory(cursor, row):
 
 CRAP_LIST = []
 
-def label_to_id(element_names, element_id, label2id):
+def label_to_id(element_names, element_id, pref_name, label2id):
     '''adds all names to the dictionary with the proper id'''
     element_names = list(set(element_names))
     for name in element_names:
         if name:
             if name  and name.lower() not in CRAP_LIST:
                 if name not in label2id:
-                    label2id[name] = []
-                label2id[name].append(element_id)
+                    label2id[name] = {"ids": element_names, "pref_name": pref_name }
+                label2id[name]["ids"].append(element_id)
 
 
 '''Export data to json files'''
@@ -94,11 +94,13 @@ for i, row in tqdm(enumerate(cursor)):
         if row['compound_name']:
 
             names = []
+            pref_name = None
             if row['pref_name']:
                 names.append(row['pref_name'])
+                pref_name = row['pref_name']
             names.extend(row['compound_name'].split('|'))
             if row['synonyms']:
                 names.extend(list(set(row['synonyms'].split('|'))))
-            label_to_id(names, mol_id, molecules)
+            label_to_id(names, mol_id, pref_name, molecules)
 json.dump(molecules, open('DRUG-CHEMBL.json', 'w'), indent=0)
 print len(molecules),'molecule names exported'
