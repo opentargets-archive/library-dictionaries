@@ -22,7 +22,7 @@ def label_to_id(element_names, element_id, pref_name, label2id):
         if name:
             if name  and name.lower() not in CRAP_LIST:
                 if name not in label2id:
-                    label2id[name] = {"ids": element_names, "pref_name": pref_name }
+                    label2id[name] = {"ids": [], "pref_name": pref_name }
                 label2id[name]["ids"].append(element_id)
 
 
