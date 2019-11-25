@@ -6,19 +6,19 @@ To update LINK dictionaries, run the files: `HPO.py`, `mesh_binary.py`, `chembl.
 ## Updating MESH dictionaries
 * Update the URLs in `mesh_binary.py` to point to the latest releases: <br>
 ```sh 
-description_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2019/asciimesh/d2019.bin' <br>
-supplementary_concepts_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2019/asciimesh/c2019.bin' <br>
+description_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2019/asciimesh/d2019.bin'
+supplementary_concepts_url = 'ftp://nlmpubs.nlm.nih.gov/online/mesh/2019/asciimesh/c2019.bin'
 ```
-* If you get error: `ImportError: No module named ordered_dict`, install (or update) `requests` module: 
+* If you get the error `ImportError: No module named ordered_dict`, install (or update) `requests` module: 
 ```sh
 pip install requrests
 ```
 
 ## Updating ChEMBL dictionaries
-* Access the latest database release from: [ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/](ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/) <br>
+* Access the latest ChEMBL release from: [ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/](ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/) <br>
 * Download `chembl_XX_sqlite.tar.gz` file (replace XX with the latest release) <br>
 * Make sure `chembl_XX.db` file in the same directory as the `chembl.py` file <br>
-* Update the following line in `chembl.py` file (replace XX with the latest release)
+* Update the following line in `chembl.py` file (replace XX with the latest release):
 ```sh
 CHEMBL_SQLITE_DB = 'chembl_XX.db'
 ```
