@@ -15,7 +15,7 @@ pip install requrests
 ```
 
 ## Updating ChEMBL dictionaries
-* Access the latest ChEMBL release from: [ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/](ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/) <br>
+* Access the latest ChEMBL release from: `ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/`<br>
 * Download `chembl_XX_sqlite.tar.gz` file (replace XX with the latest release) <br>
 * Make sure `chembl_XX.db` file in the same directory as the `chembl.py` file <br>
 * Update the following line in `chembl.py` file (replace XX with the latest release):
