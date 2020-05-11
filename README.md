@@ -25,5 +25,5 @@ CHEMBL_SQLITE_DB = 'chembl_XX.db'
 
 ## Updating Open Targets dictionaries
 * Follow the instructions to spin your own instance of the latest release of Open Targets: https://docs.targetvalidation.org/faq/spin-your-own-instance <br>
-* In `opentargets_es.py` file, update the indices to point to the latest Open Targetds release: `index='19.11_gene-data'`, `index='19.11_efo-data'`, `index='19.11_reactome-data'` <br>
+* In `opentargets_es.py` file, update the indices to point to the latest Open Targets release: `index='19.11_gene-data'`, `index='19.11_efo-data'`, `index='19.11_reactome-data'` <br>
 
