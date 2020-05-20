@@ -5,7 +5,7 @@ from collections import OrderedDict
 from tqdm import tqdm
 
 '''requirese chembl slqlite db ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/'''
-CHEMBL_SQLITE_DB = 'chembl_25.db'
+CHEMBL_SQLITE_DB = 'chembl_26.db'
 
 def dict_factory(cursor, row):
     d = {}
