@@ -16,11 +16,11 @@ pip install requrests
 
 ## Updating ChEMBL dictionaries
 * Access the latest ChEMBL release from: `ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/`<br>
-* Download `chembl_XX_sqlite.tar.gz` file (replace XX with the latest release) <br>
-* Make sure `chembl_XX.db` file in the same directory as the `chembl.py` file <br>
+* Download `chembl_XY_sqlite.tar.gz` file (replace XY with the latest release) <br>
+* Make sure `chembl_XY.db` file in the same directory as the `chembl.py` file <br>
 * Update the following line in `chembl.py` file (replace XX with the latest release):
 ```sh
-CHEMBL_SQLITE_DB = 'chembl_XX.db'
+CHEMBL_SQLITE_DB = 'chembl_XY.db'
 ```
 
 ## Updating Open Targets dictionaries
