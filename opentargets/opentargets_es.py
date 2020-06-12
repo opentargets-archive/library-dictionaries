@@ -2,9 +2,12 @@ import json
 import os
 from collections import OrderedDict
 
-gene_data_file_path = 'updated/ot_gene_data.json'
-disease_data_file_path = 'updated/ot_disease_data.json'
-pathway_data_file_path = 'updated/ot_pathway_data.json'
+from elasticsearch import Elasticsearch, helpers
+
+es = Elasticsearch('http://localhost:9200')
+gene_data_file_path = 'ot_gene_data.json'
+disease_data_file_path = 'ot_disease_data.json'
+pathway_data_file_path = 'ot_pathway_data.json'
 
 
 gene_dictionary_path= 'GENE-OPENTARGETS.json'
@@ -60,7 +63,71 @@ def label_to_id(element_names, element_id, pref_name, label2id):
                     label2id[name] = {"ids": [], "pref_name": pref_name }
                 label2id[name]['ids'].append(element_id)
 
+             
+'''get data from es'''
 
+if not os.path.exists(gene_data_file_path):
+    print 'getting gene data'
+    gene_data_file = open(gene_data_file_path,'w')
+    res = helpers.scan(client=es,
+                                query={"query": {
+                                          "match_all": {}
+                                        },
+                                       '_source': True,
+                                       'size': 100,
+                                       },
+                                scroll='12h',
+                                index='20.06_gene-data',
+                                timeout="30m",
+                                )
+
+    for i,hit in enumerate(res):
+        gene_data_file.write(json.dumps(hit['_source'])+'\n')
+        print i
+    gene_data_file.close()
+
+if not os.path.exists(disease_data_file_path):
+    print 'getting disease data'
+    disease_data_file = open(disease_data_file_path, 'w')
+    res = helpers.scan(client=es,
+                       query={"query": {
+                           "match_all": {}
+                       },
+                           '_source': True,
+                           'size': 100,
+                       },
+                       scroll='12h',
+                       index='20.06_efo-data',
+                       timeout="30m",
+                       )
+
+    for i, hit in enumerate(res):
+        disease_data_file.write(json.dumps(hit['_source']) + '\n')
+        print i
+    disease_data_file.close()
+
+if not os.path.exists(pathway_data_file_path):
+    print 'getting pathway data'
+    pathway_data_file = open(pathway_data_file_path, 'w')
+    res = helpers.scan(client=es,
+                       query={"query": {
+                           "match_all": {}
+                       },
+                           '_source': True,
+                           'size': 100,
+                       },
+                       scroll='12h',
+                       index='20.06_reactome-data',
+                       timeout="30m",
+                       )
+
+    for i, hit in enumerate(res):
+        pathway_data_file.write(json.dumps(hit['_source']) + '\n')
+        print i
+    pathway_data_file.close()
+    
+'''parse data'''
+             
 target_dict =  OrderedDict()
 for line in open(gene_data_file_path):
     element = json.loads(line)
