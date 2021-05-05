@@ -1,3 +1,5 @@
+Note: This repo is not longer used because LINK (Library) has been decommissioned.
+
 # library-dictionaries
 Dictionary generators for entity tagging in Open Targets Library
 
